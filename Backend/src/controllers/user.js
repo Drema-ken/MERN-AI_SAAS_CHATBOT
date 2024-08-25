@@ -18,11 +18,8 @@ export const signup = async (req, res) => {
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
 
-    //checking user don't exist already
-    const doesExist = User.findOne({ email });
-    if (doesExist) {
-      return res.status(400).json({ message: "User already exists" });
-    }
+    //MONGODB already handles making sure no two documents have same email check schema
+
     //creating new user
     const newUser = await new User({
       name,
