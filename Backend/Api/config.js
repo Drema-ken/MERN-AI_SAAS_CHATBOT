@@ -42,8 +42,3 @@ async function run(prompt) {
   const result = await chatSession.sendMessage(prompt);
   return result.response.text();
 }
-
-const m = async () => {
-  const message = await run("how can i install dotenv using npm");
-  console.log(message);
-};
