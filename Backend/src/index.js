@@ -1,6 +1,5 @@
 import app from "./app.js";
 import { connectDB } from "./models/connect.js";
-import User from "./models/user.js";
 
 app.listen(process.env.PORT || 5000, () => {
   try {

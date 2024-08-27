@@ -1,5 +1,6 @@
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
+import { createToken } from "../utils/token-manager.js";
 
 export const getAllUsers = async (req, res, next) => {
   //get all users from db
@@ -28,9 +29,35 @@ export const signup = async (req, res) => {
     });
     await newUser.save();
 
+    if (req.cookies.auth_token) {
+      res.clearCookie("auth_token", {
+        path: "/",
+        domain: "localhost",
+        httpOnly: true,
+        secure: true,
+        signed: true,
+      });
+    }
+
+    //creating token for user
+    const token = createToken(user._id.toString(), email, "7d");
+
+    //sending token as cookie
+    const expires = new Date();
+    expires.setDate(expires.getDate() + 7);
+    res.cookie("auth_token", token, {
+      path: "/",
+      domain: "localhost",
+      httpOnly: true,
+      secure: true,
+      expires,
+      signed: true,
+    });
+
     return res.status(200).json({
       message: "User successfully created",
-      id: newUser._id.toString(),
+      name: user.name,
+      email: user.email,
     });
   } catch (error) {
     console.log(error);
@@ -43,16 +70,61 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "No such User" });
+      return res.status(401).json({ message: "No such User" });
     }
     const passwordMatch = bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       return res.status(400).json({ message: "Invalid credential" });
     }
 
-    return res.status(201).json({ message: "OK", user: user._id });
+    //if user relogins , old token is cleared
+
+    if (req.cookies.auth_token) {
+      res.clearCookie("auth_token", {
+        path: "/",
+        domain: "localhost",
+        httpOnly: true,
+        secure: true,
+        signed: true,
+      });
+    }
+
+    //creating token for user
+    const token = createToken(user._id.toString(), email, "7d");
+
+    //sending token as cookie
+    const expires = new Date();
+    expires.setDate(expires.getDate() + 7);
+    res.cookie("auth_token", token, {
+      path: "/",
+      domain: "localhost",
+      httpOnly: true,
+      secure: true,
+      expires,
+      signed: true,
+    });
+
+    return res
+      .status(201)
+      .json({ message: "OK", name: user.name, email: user.email });
   } catch (error) {
-    console.log(error);
     res.status(400).json({ status: "Error", message: error.message });
+  }
+};
+
+export const verifyUser = async (req, res) => {
+  try {
+    const user = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "User no registered or token malfunctioned!" });
+    }
+    if (user._id.toString() !== res.locals.jwtData.id) {
+      return res.status(400).json({ message: "Permissions did not match" });
+    }
+    return res.status(200).json({ name: user.name, email: user.email });
+  } catch (error) {
+    return res.status(400).json({ message: "Error", status: error.message });
   }
 };

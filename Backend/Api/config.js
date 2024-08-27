@@ -30,15 +30,19 @@ const generationConfig = {
   maxOutputTokens: 8192,
   responseMimeType: "text/plain",
 };
+let discussionHistory = [];
 
 async function run(prompt) {
   const chatSession = model.startChat({
     generationConfig,
     // safetySettings: Adjust safety settings
     // See https://ai.google.dev/gemini-api/docs/safety-settings
-    history: [],
+    history: discussionHistory,
   });
 
   const result = await chatSession.sendMessage(prompt);
+
   return result.response.text();
 }
+
+export default run;
