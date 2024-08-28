@@ -9,8 +9,8 @@ import NotFound from './pages/NotFound.tsx'
 import { useAuth } from './Context/Authcontext.tsx'
 
 const App = () => {
+  const auth = useAuth()
   
-  console.log(useAuth()?.isLoggedIn);
   
   return (
     <main>
@@ -19,7 +19,7 @@ const App = () => {
         <Route path='/' element={<Home/>}/>
         <Route path='/login' element={<Login/>}/>
         <Route path='/signup' element={<Signup/>}/>
-        <Route path='/chat' element={<Chat/>}/>
+        {auth?.isLoggedIn && <Route path='/chat' element={<Chat/>}/>}
         <Route path='*' element={<NotFound/>}/>
       </Routes>
     </main>

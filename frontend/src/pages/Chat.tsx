@@ -32,8 +32,13 @@ const Chat = () => {
    
    setChatMessages((prev)=> [...prev,newMessage])
    //send recent prompt to gemini to generate response
-   const chatData = await sendChatMessage(recentPrompt);
+   try{
+    const chatData = await sendChatMessage(recentPrompt);
    setChatMessages([...chatData.chats])
+   }catch(err){
+    console.log(err)
+   }
+   
   }
     
   }
@@ -47,7 +52,7 @@ const Chat = () => {
                 {auth?.user?.name[0]}{auth?.user?.name[1]}
               </Avatar>
               <Typography sx={{mx:'auto',fontFamily:'"Trebuchet Ms" consolas'}}>You are talking to a chatbot</Typography>
-              <Typography sx={{mx:'auto',fontFamily:'"Trebuchet Ms" consolas',my:4,padding:3}}>You can ask questions related to Business, Coding, Advices. But avoid sharing personal information</Typography>
+              <Typography sx={{mx:'auto',fontFamily:'"Trebuchet Ms" consolas',my:4,padding:3}}>You can ask questions related to Business, Coding, Advices and more. But avoid sharing personal information</Typography>
               <Button sx={{width:'200px', m:'auto', color:'white',fontWeight:'700',borderRadius:3,mx:'auto',bgcolor:red[300],":hover":{
                 bgcolor:red.A200
               }}}>CLEAR CONVERSATION</Button>
