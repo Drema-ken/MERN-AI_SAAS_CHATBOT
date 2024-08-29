@@ -1,12 +1,13 @@
 import { Box, Typography, Button } from "@mui/material";
 import CustomizedInput from "../components/shared/Customized-Input";
-import { IoIosLogIn, IoIosSettings } from "react-icons/io";
+import { FiUserPlus } from "react-icons/fi";
 import { useAuth } from "../Context/Authcontext";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const auth = useAuth();
-
+  const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget); //explain this new syntax
@@ -14,9 +15,12 @@ const Signup = () => {
     const email = formData.get("Email") as string;
     const password = formData.get("Password") as string; //what does it means to set something as string or a type
     try {
-      toast.loading("Signing up!", { id: "signup" });
-      await auth?.signup(userName, email, password);
-      toast.success("Successfully signed up!", { id: "signup" });
+      if (!(userName === "" && email === "" && password === "")) {
+        toast.loading("Signing up!", { id: "signup" });
+        await auth?.signup(userName, email, password);
+        navigate("/");
+        toast.success("Successfully signed up!", { id: "signup" });
+      }
     } catch (error: any) {
       console.log({ error: error.code, message: error.message });
       toast.error("Couldn't create account!", { id: "signup" });
@@ -64,7 +68,7 @@ const Signup = () => {
             <CustomizedInput type="password" label="Password" name="Password" />
             <Button
               type="submit"
-              endIcon={<IoIosSettings />}
+              endIcon={<FiUserPlus />}
               sx={{
                 px: 2,
                 py: 1,

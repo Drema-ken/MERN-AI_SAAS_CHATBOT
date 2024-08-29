@@ -9,6 +9,7 @@ import {
   checkAuthStatus,
   createUser,
   loginUser,
+  logoutUser,
 } from "../helpers/api-communicator";
 
 type User = {
@@ -30,7 +31,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>({ name: "idy", email: "fuck" });
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
-  useEffect(() => {
+  /* useEffect(() => {
     //if user cookies are valid then skip login
     try {
       async function checkStatus() {
@@ -45,7 +46,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, []);*/
 
   const login: UserAuth["login"] = async (email, password) => {
     const data = await loginUser(email, password);
@@ -63,8 +64,14 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
   const logout: UserAuth["logout"] = async () => {
-    setUser(null);
-    setIsLoggedIn(false);
+    try {
+      await logoutUser();
+      setUser(null);
+      setIsLoggedIn(false);
+      window.location.reload();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const value = {

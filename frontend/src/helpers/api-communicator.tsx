@@ -40,3 +40,12 @@ export const sendChatMessage = async (message: string) => {
   const data = await res.data;
   return data;
 };
+
+export const logoutUser = async () => {
+  const res = await axios.get("/users/logout");
+  if (res.status !== 200) {
+    throw new Error("Logging out Error");
+  }
+  const data = await res.data;
+  return data;
+};

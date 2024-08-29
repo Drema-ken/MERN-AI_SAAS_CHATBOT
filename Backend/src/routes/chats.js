@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { verifyToken } from "../utils/token-manager";
-import { generateChat } from "../controllers/chats";
+import { verifyToken } from "../utils/token-manager.js";
+import { generateChat } from "../controllers/chats.js";
 
 const chatRouter = Router();
 

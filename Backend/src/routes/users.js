@@ -1,5 +1,11 @@
 import { Router } from "express";
-import { getAllUsers, login, signup, verifyUser } from "../controllers/user.js";
+import {
+  getAllUsers,
+  login,
+  logoutUser,
+  signup,
+  verifyUser,
+} from "../controllers/user.js";
 import {
   loginValidator,
   signupValidator,
@@ -13,5 +19,6 @@ userRouter.get("/", getAllUsers);
 userRouter.post("/signup", validate(signupValidator), signup);
 userRouter.post("/login", validate(loginValidator), login);
 userRouter.get("/auth-status", verifyToken, verifyUser);
+userRouter.get("/logout", logoutUser);
 
 export default userRouter;

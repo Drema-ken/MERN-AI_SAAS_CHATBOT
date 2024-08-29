@@ -40,7 +40,7 @@ export const signup = async (req, res) => {
     }
 
     //creating token for user
-    const token = createToken(user._id.toString(), email, "7d");
+    const token = createToken(newUser._id.toString(), email, "7d");
 
     //sending token as cookie
     const expires = new Date();
@@ -56,8 +56,8 @@ export const signup = async (req, res) => {
 
     return res.status(200).json({
       message: "User successfully created",
-      name: user.name,
-      email: user.email,
+      name: newUser.name,
+      email: newUser.email,
     });
   } catch (error) {
     console.log(error);
@@ -123,6 +123,30 @@ export const verifyUser = async (req, res) => {
     if (user._id.toString() !== res.locals.jwtData.id) {
       return res.status(400).json({ message: "Permissions did not match" });
     }
+    return res.status(200).json({ name: user.name, email: user.email });
+  } catch (error) {
+    return res.status(400).json({ message: "Error", status: error.message });
+  }
+};
+
+export const logoutUser = async (req, res) => {
+  try {
+    const user = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "User not registered or token malfunctioned!" });
+    }
+    if (user._id.toString() !== res.locals.jwtData.id) {
+      return res.status(400).json({ message: "Permissions did not match" });
+    }
+    res.clearCookie("auth_token", {
+      path: "/",
+      domain: "localhost",
+      httpOnly: true,
+      secure: true,
+      signed: true,
+    });
     return res.status(200).json({ name: user.name, email: user.email });
   } catch (error) {
     return res.status(400).json({ message: "Error", status: error.message });

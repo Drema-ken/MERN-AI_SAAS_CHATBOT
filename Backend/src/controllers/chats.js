@@ -1,5 +1,5 @@
-import run from "../../Api/config";
-import User from "../models/user";
+import run from "../../Api/config.js";
+import User from "../models/user.js";
 
 export const generateChat = async (req, res, next) => {
   try {

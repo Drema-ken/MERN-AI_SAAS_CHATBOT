@@ -3,9 +3,11 @@ import CustomizedInput from "../components/shared/Customized-Input";
 import { IoIosLogIn } from "react-icons/io";
 import { useAuth } from "../Context/Authcontext";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const auth = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -15,6 +17,7 @@ const Login = () => {
     try {
       toast.loading("Signing in!", { id: "login" });
       await auth?.login(email, password);
+      navigate("/");
       toast.success("Successfully signed In!", { id: "login" });
     } catch (error: any) {
       console.log({ error: error.code, message: error.message });

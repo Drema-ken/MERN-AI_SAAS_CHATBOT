@@ -15,7 +15,9 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 
 //only for dev
 app.use(morgan("dev"));
-
+app.get("/", (req, res) => {
+  res.send("good");
+});
 //middlewares
 app.use("/api/v1", appRouter);
 
