@@ -40,3 +40,9 @@ body {
     transform: rotate(359deg);
   }
 }
+
+@media (min-width: "900px") {
+  .responsive {
+    display: none;
+  }
+}
