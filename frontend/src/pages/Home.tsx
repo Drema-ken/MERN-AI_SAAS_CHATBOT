@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 
 const Home = () => {
   const theme = useTheme();
+  //@ts-ignore
   const isBelowMd = useMediaQuery(theme.breakpoints.down("md"));
   return (
     <Box width={"100%"} height={"100%"}>
