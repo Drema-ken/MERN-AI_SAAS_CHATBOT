@@ -8,7 +8,6 @@ import {
   chatting,
   deleteAllChats,
   fetchingAllChats,
-  sendChatMessage,
 } from "../helpers/api-communicator";
 import toast from "react-hot-toast";
 
@@ -46,53 +45,6 @@ const Chat = () => {
         console.log(chats);
       } catch (error) {
         console.log(error);
-      }
-    }
-  };
-  const handleSubmit = async () => {
-    const recentPrompt = inputRef.current?.value as string;
-
-    //set input value to ''
-    if (inputRef && inputRef.current) {
-      inputRef.current.value = "";
-    }
-    if (recentPrompt !== "") {
-      const newMessages: Message[] = [
-        {
-          role: "user",
-          content: "Hello, how are you?",
-        },
-        {
-          role: "model",
-          content: "I'm doing well, thank you! How can I assist you today?",
-        },
-        {
-          role: "user",
-          content: "I need help with writing a Python program.",
-        },
-        {
-          role: "model",
-          content:
-            "I'd be happy to help! What kind of program are you trying to write?",
-        },
-        {
-          role: "user",
-          content: "A simple calculator program.",
-        },
-        {
-          role: "model",
-          content:
-            "here is a javascript code ``` function log(){console.log()} const hello=()=>{alert('new messsage')}//message here```",
-        },
-      ];
-      newMessages.push({ role: "user", content: recentPrompt });
-      setChatMessages((prev) => [...newMessages]); //in the main make sure that this is configured well so chat is gotten from gemini
-      //send recent prompt to gemini to generate response
-      try {
-        const chatData = await sendChatMessage(recentPrompt);
-        setChatMessages([...chatData.chats]);
-      } catch (err) {
-        console.log(err);
       }
     }
   };
