@@ -35,16 +35,6 @@ export const checkAuthStatus = async () => {
   }
 };
 
-//set up the gemini model for the controller
-export const sendChatMessage = async (message: string) => {
-  const res = await axios.post("/chats/new", { message });
-  if (res.status !== 200) {
-    throw new Error("Authentication failed");
-  }
-  const data = await res.data;
-  return data;
-};
-
 export const logoutUser = async () => {
   const res = await axios.get("/users/logout");
   if (res.status !== 200) {
@@ -54,6 +44,7 @@ export const logoutUser = async () => {
   return data;
 };
 
+//set up the gemini model for the controller
 export const chatting = async (message: any) => {
   console.log(message);
   const res = await axios.post("/chats/new", { message });
