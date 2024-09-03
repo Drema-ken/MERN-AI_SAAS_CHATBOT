@@ -170,7 +170,7 @@ const Chat = () => {
         </Typography>
         <Box
           sx={{
-            width: "100%",
+            width: "80vw",
             height: "60vh",
             borderRadius: 3,
             mx: "auto",

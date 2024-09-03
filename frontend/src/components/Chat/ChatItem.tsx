@@ -3,6 +3,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coldarkDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const isCodeBlock = (str: string) => {
+  if (str.includes("Explanation")) return false;
   if (
     str.includes("=") ||
     str.includes(";") ||
@@ -26,12 +27,13 @@ const extractCode = (str: string) => {
 
 const formatResponse = (str: string) => {
   const newStr = str
-    .split("*")
+    .split("**")
+
     .map((e, i) => {
       if (i % 2 !== 0) {
-        return `<b>${e}</b>`;
+        return `<b style={{color:'red'}}> ${e}</b >`;
       }
-      return e;
+      return `${e}`;
     })
     .join();
   console.log(newStr);
@@ -86,17 +88,29 @@ const ChatItem = ({
             style={{ borderRadius: "50%" }}
           />
         </Avatar>
-        <Box sx={{}}>
+        <Box sx={{ width: "100%" }}>
           {!messageBlocks && <Typography>{content}</Typography>}
           {messageBlocks &&
             messageBlocks.length !== 0 &&
             messageBlocks.map((block) =>
               isCodeBlock(block) ? (
-                <SyntaxHighlighter style={coldarkDark} language="javascript">
-                  {formatResponse(block)}
-                </SyntaxHighlighter>
+                <Box sx={{ display: "flex" }}>
+                  <SyntaxHighlighter
+                    style={coldarkDark}
+                    customStyle={{
+                      width: "90%",
+                      padding: "2px",
+                    }}
+                    language="javascript"
+                  >
+                    {formatResponse(block)}
+                  </SyntaxHighlighter>
+                </Box>
               ) : (
-                <Typography>{formatResponse(block)}</Typography>
+                <p
+                  style={{ paddingRight: "3px" }}
+                  dangerouslySetInnerHTML={{ __html: block }}
+                ></p>
               )
             )}
         </Box>
