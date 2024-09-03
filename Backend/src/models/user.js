@@ -7,7 +7,7 @@ const dataType = {
 
 const chatSchema = new mongoose.Schema({
   role: dataType,
-  content: dataType,
+  parts: [{ text: dataType }],
 });
 
 const userSchema = new mongoose.Schema({

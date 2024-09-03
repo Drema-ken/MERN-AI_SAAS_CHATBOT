@@ -3,22 +3,52 @@ import { useAuth } from "../Context/Authcontext";
 import { red } from "@mui/material/colors";
 import ChatItem from "../components/Chat/ChatItem";
 import { IoMdSend } from "react-icons/io";
-import { useRef, useState } from "react";
-import { sendChatMessage } from "../helpers/api-communicator";
+import { useEffect, useRef, useState } from "react";
+import {
+  chatting,
+  deleteAllChats,
+  fetchingAllChats,
+  sendChatMessage,
+} from "../helpers/api-communicator";
+import toast from "react-hot-toast";
 
 type Message = {
-  role: "user" | "assistant";
+  role: "user" | "model";
   content: string;
 };
+
 const Chat = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const auth = useAuth();
-  /// const chatView = useRef(null)
+
   //@ts-ignore
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
-  /* const srollIntoView = () =>{
-         chatView.current.scrollBy()
-  }*/
+
+  const Submit = async () => {
+    const recentPrompt = inputRef.current?.value as string;
+    setChatMessages((prev) => [
+      ...prev,
+      { role: "user", content: recentPrompt },
+    ]);
+    //set input value to ''
+    if (inputRef && inputRef.current) {
+      inputRef.current.value = "";
+    }
+    if (recentPrompt !== "") {
+      const result = await chatting(recentPrompt);
+      try {
+        //@ts-ignore
+        const chats = result.map((chat) => {
+          //@ts-ignore
+          return { role: chat.role, content: chat.parts[0].text };
+        });
+        setChatMessages(() => [...chats]);
+        console.log(chats);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
   const handleSubmit = async () => {
     const recentPrompt = inputRef.current?.value as string;
 
@@ -27,17 +57,13 @@ const Chat = () => {
       inputRef.current.value = "";
     }
     if (recentPrompt !== "") {
-      /*const newMessage: Message = {
-      role:'user',
-      content: recentPrompt
-    }*/
       const newMessages: Message[] = [
         {
           role: "user",
           content: "Hello, how are you?",
         },
         {
-          role: "assistant",
+          role: "model",
           content: "I'm doing well, thank you! How can I assist you today?",
         },
         {
@@ -45,7 +71,7 @@ const Chat = () => {
           content: "I need help with writing a Python program.",
         },
         {
-          role: "assistant",
+          role: "model",
           content:
             "I'd be happy to help! What kind of program are you trying to write?",
         },
@@ -54,7 +80,7 @@ const Chat = () => {
           content: "A simple calculator program.",
         },
         {
-          role: "assistant",
+          role: "model",
           content:
             "here is a javascript code ``` function log(){console.log()} const hello=()=>{alert('new messsage')}//message here```",
         },
@@ -70,6 +96,36 @@ const Chat = () => {
       }
     }
   };
+
+  const handleChatDelete = async () => {
+    try {
+      toast.loading("Deleting chats", { id: "delete" });
+      await deleteAllChats();
+      setChatMessages([]);
+      toast.success("Successfully deleted chats", { id: "delete" });
+    } catch (err) {
+      toast.error("Failed to delete chats", { id: "delete" });
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    if (auth?.isLoggedIn) {
+      try {
+        toast.loading("Loading chats", { id: "loadChats" });
+        const getChats = async () => {
+          const chats = await fetchingAllChats();
+          console.log(chats);
+          setChatMessages(chats);
+        };
+        getChats().then(() =>
+          toast.success("Successfully loaded chats!", { id: "loadChats" })
+        );
+      } catch (error) {
+        toast.error("Failed to load Chats", { id: "loadChats" });
+        console.log(error);
+      }
+    }
+  }, [auth]);
   return (
     <Box sx={{ display: "flex", width: "100%", height: "100%", mt: 3, gap: 3 }}>
       <Box
@@ -123,6 +179,7 @@ const Chat = () => {
             But avoid sharing personal information
           </Typography>
           <Button
+            onClick={handleChatDelete}
             sx={{
               width: "200px",
               m: "auto",
@@ -207,10 +264,7 @@ const Chat = () => {
                 fontSize: "20px",
               }}
             />
-            <IconButton
-              sx={{ ml: "auto", color: "white" }}
-              onClick={handleSubmit}
-            >
+            <IconButton sx={{ ml: "auto", color: "white" }} onClick={Submit}>
               <IoMdSend />
             </IconButton>
           </div>

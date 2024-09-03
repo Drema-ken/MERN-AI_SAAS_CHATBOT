@@ -28,10 +28,10 @@ type UserAuth = {
 const AuthContext = createContext<UserAuth | null>(null); //DON'T REALLY UNDERSTAND THIS PART
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>({ name: "idy", email: "fuck" });
+  const [user, setUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  /* useEffect(() => {
+  useEffect(() => {
     //if user cookies are valid then skip login
     try {
       async function checkStatus() {
@@ -46,7 +46,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.log(error);
     }
-  }, []);*/
+  }, []);
 
   const login: UserAuth["login"] = async (email, password) => {
     const data = await loginUser(email, password);
@@ -68,7 +68,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       await logoutUser();
       setUser(null);
       setIsLoggedIn(false);
-      window.location.reload();
+      //window.location.reload();
     } catch (e) {
       console.log(e);
     }

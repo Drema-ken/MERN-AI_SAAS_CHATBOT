@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import CustomizedInput from "../components/shared/Customized-Input";
 import { FiUserPlus } from "react-icons/fi";
@@ -18,7 +19,7 @@ const Signup = () => {
       if (!(userName === "" && email === "" && password === "")) {
         toast.loading("Signing up!", { id: "signup" });
         await auth?.signup(userName, email, password);
-        navigate("/");
+
         toast.success("Successfully signed up!", { id: "signup" });
       }
     } catch (error: any) {
@@ -26,6 +27,11 @@ const Signup = () => {
       toast.error("Couldn't create account!", { id: "signup" });
     }
   };
+  useEffect(() => {
+    if (auth?.isLoggedIn) {
+      navigate("/chat");
+    }
+  }, [auth]);
   return (
     <Box width={"100%"} height={"100%"} display={"flex"} flex={1}>
       <Box

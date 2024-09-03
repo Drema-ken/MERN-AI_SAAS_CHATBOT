@@ -23,12 +23,16 @@ export const createUser = async (
 };
 
 export const checkAuthStatus = async () => {
-  const res = await axios.get("/users/auth-status");
-  if (res.status !== 200) {
-    throw new Error("Authentication failed");
+  try {
+    const res = await axios.get("/users/auth-status");
+    if (res.status !== 200) {
+      throw new Error("Authentication failed");
+    }
+    const data = await res.data;
+    return data;
+  } catch (err) {
+    console.log(err);
   }
-  const data = await res.data;
-  return data;
 };
 
 //set up the gemini model for the controller
@@ -48,4 +52,26 @@ export const logoutUser = async () => {
   }
   const data = await res.data;
   return data;
+};
+
+export const chatting = async (message: any) => {
+  console.log(message);
+  const res = await axios.post("/chats/new", { message });
+  console.log(res.data.chat);
+  return res.data.chat;
+};
+
+export const fetchingAllChats = async () => {
+  const res = await axios.get("/chats/all-chats");
+  //@ts-ignore
+
+  const formattedResult = res.data.chats.map((chat) => {
+    return { role: chat.role, content: chat.parts[0].text };
+  });
+  return formattedResult;
+};
+
+export const deleteAllChats = async () => {
+  const res = await axios.delete("/chats/delete-chats");
+  return res;
 };

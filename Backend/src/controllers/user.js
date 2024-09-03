@@ -118,7 +118,7 @@ export const verifyUser = async (req, res) => {
     if (!user) {
       return res
         .status(400)
-        .json({ message: "User no registered or token malfunctioned!" });
+        .json({ message: "User not registered or token malfunctioned!" });
     }
     if (user._id.toString() !== res.locals.jwtData.id) {
       return res.status(400).json({ message: "Permissions did not match" });
@@ -147,7 +147,7 @@ export const logoutUser = async (req, res) => {
       secure: true,
       signed: true,
     });
-    return res.status(200).json({ name: user.name, email: user.email });
+    return res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
     return res.status(400).json({ message: "Error", status: error.message });
   }

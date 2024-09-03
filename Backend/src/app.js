@@ -11,10 +11,9 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
-app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(cors());
+//app.use(cors());
 
 //only for dev
 app.use(morgan("dev"));
