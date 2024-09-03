@@ -205,6 +205,13 @@ const Chat = () => {
             }}
           >
             <input
+              onFocus={(e) => {
+                document.addEventListener("keydown", (event) => {
+                  if (event.key === "Enter") {
+                    Submit();
+                  }
+                });
+              }}
               ref={inputRef}
               style={{
                 width: "100%",
