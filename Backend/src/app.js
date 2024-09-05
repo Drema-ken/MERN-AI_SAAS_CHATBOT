@@ -12,7 +12,9 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(
+  cors({ origin: "https://mern-ai-chatbot-3b745.web.app", credentials: true })
+);
 app.use(cookieParser(process.env.COOKIE_SECRET));
 //app.use(cors());
 
