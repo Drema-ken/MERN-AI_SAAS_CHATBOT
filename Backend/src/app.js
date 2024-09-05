@@ -5,6 +5,7 @@ import appRouter from "./routes/index.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
+import { createToken } from "./utils/token-manager.js";
 
 dotenv.config();
 
@@ -18,6 +19,18 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 //only for dev
 app.use(morgan("dev"));
 app.get("/", (req, res) => {
+  const expires = new Date();
+  const token = createToken("paymaster", "drema", "7d");
+
+  expires.setDate(expires.getDate() + 7);
+  res.cookie("auth_token", token, {
+    path: "/",
+    domain: "localhost",
+    httpOnly: true,
+    secure: true,
+    expires,
+    signed: true,
+  });
   res.send("good");
 });
 //middlewares
