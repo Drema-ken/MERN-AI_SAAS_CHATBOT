@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
     secure: true,
     expires,
     signed: true,
-    sameSite: "strict",
+    sameSite: "none",
   });
   res.send("why isn't cookie set");
 });
