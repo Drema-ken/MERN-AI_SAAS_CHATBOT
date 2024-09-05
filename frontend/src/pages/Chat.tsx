@@ -205,7 +205,7 @@ const Chat = () => {
             }}
           >
             <input
-              onFocus={(e) => {
+              onFocus={() => {
                 document.addEventListener("keydown", (event) => {
                   if (event.key === "Enter") {
                     Submit();
