@@ -7,8 +7,8 @@ import { deleteAllChats } from "../controllers/chats.js";
 const chatRouter = Router();
 
 //protected routes
-chatRouter.post("/new", generateChat);
-chatRouter.get("/all-chats", getAllUserChats);
-chatRouter.delete("/delete-chats", deleteAllChats);
+chatRouter.post("/new", verifyToken, generateChat);
+chatRouter.get("/all-chats", verifyToken, getAllUserChats);
+chatRouter.delete("/delete-chats", verifyToken, deleteAllChats);
 
 export default chatRouter;
