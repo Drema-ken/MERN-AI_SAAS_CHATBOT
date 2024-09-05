@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
   res.cookie("auth_token", token, {
     path: "/",
     domain: "localhost",
-    httpOnly: true,
+    httpOnly: false,
     secure: true,
     expires,
     signed: true,
