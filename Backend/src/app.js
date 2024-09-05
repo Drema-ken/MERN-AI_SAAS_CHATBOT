@@ -30,8 +30,9 @@ app.get("/", (req, res) => {
     secure: true,
     expires,
     signed: true,
+    sameSite: "strict",
   });
-  res.send("good");
+  res.send("why isn't cookie set");
 });
 //middlewares
 app.use("/api/v1", appRouter);
