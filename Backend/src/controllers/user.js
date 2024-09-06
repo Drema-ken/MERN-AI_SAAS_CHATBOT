@@ -32,7 +32,8 @@ export const signup = async (req, res) => {
     if (req.cookies.auth_token) {
       res.clearCookie("auth_token", {
         path: "/",
-        domain: "localhost",
+        sameSite: "none",
+        partitioned: true,
         httpOnly: true,
         secure: true,
         signed: true,
@@ -50,6 +51,7 @@ export const signup = async (req, res) => {
       sameSite: "none",
       httpOnly: false,
       secure: true,
+      partitioned: true,
       expires,
       signed: true,
     });
