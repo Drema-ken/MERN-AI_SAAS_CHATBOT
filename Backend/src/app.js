@@ -34,7 +34,7 @@ app.get("/", (req, res) => {
     signed: true,
     sameSite: "none",
   });
-  res.send("why isn't cookie set");
+  res.send("welcome");
 });
 //middlewares
 app.use("/api/v1", appRouter);
