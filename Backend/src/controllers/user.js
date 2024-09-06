@@ -47,7 +47,7 @@ export const signup = async (req, res) => {
     expires.setDate(expires.getDate() + 7);
     res.cookie("auth_token", token, {
       path: "/",
-      domain: "localhost",
+      domain: "mern-ai-chatbot-3b745.web.app",
       httpOnly: true,
       secure: true,
       expires,
@@ -58,6 +58,7 @@ export const signup = async (req, res) => {
       message: "User successfully created",
       name: newUser.name,
       email: newUser.email,
+      token: token,
     });
   } catch (error) {
     console.log(error);
@@ -104,9 +105,12 @@ export const login = async (req, res) => {
       signed: true,
     });
 
-    return res
-      .status(201)
-      .json({ message: "OK", name: user.name, email: user.email });
+    return res.status(201).json({
+      message: "OK",
+      name: user.name,
+      email: user.email,
+      token: token,
+    });
   } catch (error) {
     res.status(400).json({ status: "Error", message: error.message });
   }
