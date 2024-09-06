@@ -47,6 +47,7 @@ export const signup = async (req, res) => {
     expires.setDate(expires.getDate() + 7);
     res.cookie("auth_token", token, {
       path: "/",
+      sameSite: "none",
       httpOnly: false,
       secure: true,
       expires,
