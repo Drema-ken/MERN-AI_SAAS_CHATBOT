@@ -47,7 +47,7 @@ export const signup = async (req, res) => {
     expires.setDate(expires.getDate() + 7);
     res.cookie("auth_token", token, {
       path: "/",
-      domain: "mern-ai-chatbot-3b745.web.app",
+      domain: "web.app",
       httpOnly: true,
       secure: true,
       expires,
