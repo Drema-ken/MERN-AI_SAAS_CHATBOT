@@ -24,17 +24,7 @@ app.get("/", (req, res) => {
   const expires = new Date();
   const token = createToken("paymaster", "drema", "7d");
 
-  expires.setDate(expires.getDate() + 7);
-  res.cookie("auth_token", token, {
-    path: "/",
-    domain: "mern-ai-chatbot-3b745.web.app",
-    httpOnly: false,
-    secure: true,
-    expires,
-    signed: true,
-    sameSite: "none",
-  });
-  res.send("welcome");
+  res.status(200).json({ token: token });
 });
 //middlewares
 app.use("/api/v1", appRouter);
