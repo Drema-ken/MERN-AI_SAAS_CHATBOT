@@ -19,7 +19,7 @@ userRouter.get("/", getAllUsers);
 userRouter.post("/signup", validate(signupValidator), signup);
 userRouter.post("/login", validate(loginValidator), login);
 userRouter.get("/auth-status", (req, res) => {
-  res.send("okay");
+  res.status(400).send("not okay");
 });
 userRouter.get("/logout", verifyToken, logoutUser);
 
