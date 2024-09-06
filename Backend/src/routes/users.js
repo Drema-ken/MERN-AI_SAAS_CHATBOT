@@ -18,7 +18,9 @@ const userRouter = Router();
 userRouter.get("/", getAllUsers);
 userRouter.post("/signup", validate(signupValidator), signup);
 userRouter.post("/login", validate(loginValidator), login);
-userRouter.get("/auth-status", verifyToken, verifyUser);
+userRouter.get("/auth-status", (req, res) => {
+  res.send("okay");
+});
 userRouter.get("/logout", verifyToken, logoutUser);
 
 export default userRouter;
