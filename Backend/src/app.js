@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
   expires.setDate(expires.getDate() + 7);
   res.cookie("auth_token", token, {
     path: "/",
-    domain: "localhost",
+    domain: "mern-ai-chatbot-3b745.web.app",
     httpOnly: false,
     secure: true,
     expires,
