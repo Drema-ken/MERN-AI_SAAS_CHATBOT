@@ -20,7 +20,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 
 //only for dev
 app.use(morgan("dev"));
-app.get("/", (req, res) => {
+app.get("/test", (req, res) => {
   const expires = new Date();
   const token = createToken("paymaster", "drema", "7d");
 
