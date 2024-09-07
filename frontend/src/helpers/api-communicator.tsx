@@ -22,9 +22,9 @@ export const createUser = async (
   return data;
 };
 
-export const checkAuthStatus = async () => {
+export const checkAuthStatus = async (token: string) => {
   try {
-    const res = await axios.get("/users/auth-status");
+    const res = await axios.post("/users/auth-status", { token });
     if (res.status !== 200) {
       throw new Error("Authentication failed");
     }
@@ -35,8 +35,9 @@ export const checkAuthStatus = async () => {
   }
 };
 
-export const logoutUser = async () => {
-  const res = await axios.get("/users/logout");
+export const logoutUser = async (token: string) => {
+  const res = await axios.post("/users/logout", { token });
+  console.log(token);
   if (res.status !== 200) {
     throw new Error("Logging out Error");
   }
@@ -45,15 +46,13 @@ export const logoutUser = async () => {
 };
 
 //set up the gemini model for the controller
-export const chatting = async (message: any) => {
-  console.log(message);
-  const res = await axios.post("/chats/new", { message });
-  console.log(res.data.chat);
+export const chatting = async (message: any, token: string) => {
+  const res = await axios.post("/chats/new", { message, token });
   return res.data.chat;
 };
 
-export const fetchingAllChats = async () => {
-  const res = await axios.get("/chats/all-chats");
+export const fetchingAllChats = async (token: string) => {
+  const res = await axios.post("/chats/all-chats", { token });
   //@ts-ignore
 
   const formattedResult = res.data.chats.map((chat) => {
@@ -62,7 +61,9 @@ export const fetchingAllChats = async () => {
   return formattedResult;
 };
 
-export const deleteAllChats = async () => {
-  const res = await axios.delete("/chats/delete-chats");
+export const deleteAllChats = async (token: string) => {
+  const res = await axios.delete("/chats/delete-chats", {
+    data: { token },
+  });
   return res;
 };

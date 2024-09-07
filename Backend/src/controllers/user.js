@@ -29,32 +29,10 @@ export const signup = async (req, res) => {
     });
     await newUser.save();
 
-    if (req.cookies.auth_token) {
-      res.clearCookie("auth_token", {
-        path: "/",
-        sameSite: "none",
-        partitioned: true,
-        httpOnly: true,
-        secure: true,
-        signed: true,
-      });
-    }
-
     //creating token for user
     const token = createToken(newUser._id.toString(), email, "7d");
 
-    //sending token as cookie
-    const expires = new Date();
-    expires.setDate(expires.getDate() + 7);
-    res.cookie("auth_token", token, {
-      path: "/",
-      sameSite: "none",
-      httpOnly: false,
-      secure: true,
-      partitioned: true,
-      expires,
-      signed: true,
-    });
+    //sending token to frontend so it can use it to set its own cookie
 
     return res.status(200).json({
       message: "User successfully created",
@@ -80,32 +58,8 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credential" });
     }
 
-    //if user relogins , old token is cleared
-
-    if (req.cookies.auth_token) {
-      res.clearCookie("auth_token", {
-        path: "/",
-        domain: "localhost",
-        httpOnly: true,
-        secure: true,
-        signed: true,
-      });
-    }
-
     //creating token for user
     const token = createToken(user._id.toString(), email, "7d");
-
-    //sending token as cookie
-    const expires = new Date();
-    expires.setDate(expires.getDate() + 7);
-    res.cookie("auth_token", token, {
-      path: "/",
-      domain: "localhost",
-      httpOnly: true,
-      secure: true,
-      expires,
-      signed: true,
-    });
 
     return res.status(201).json({
       message: "OK",
@@ -146,13 +100,7 @@ export const logoutUser = async (req, res) => {
     if (user._id.toString() !== res.locals.jwtData.id) {
       return res.status(400).json({ message: "Permissions did not match" });
     }
-    res.clearCookie("auth_token", {
-      path: "/",
-      domain: "localhost",
-      httpOnly: true,
-      secure: true,
-      signed: true,
-    });
+
     return res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
     return res.status(400).json({ message: "Error", status: error.message });

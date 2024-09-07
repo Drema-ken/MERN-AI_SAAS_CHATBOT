@@ -8,7 +8,7 @@ import AuthProvider from "./Context/Authcontext.tsx";
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
 
-axios.defaults.baseURL = "https://mern-ai-saas-chatbot.onrender.com/api/v1"; //when deploying the app change this to the backend uri
+axios.defaults.baseURL = "http://localhost:8000/api/v1"; //when deploying the app change this to the backend uri
 axios.defaults.withCredentials = true; //check what this does too
 const theme = createTheme({
   typography: {

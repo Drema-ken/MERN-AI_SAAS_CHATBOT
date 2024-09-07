@@ -30,22 +30,25 @@ const AuthContext = createContext<UserAuth | null>(null); //DON'T REALLY UNDERST
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [AuthToken, setAuthToken] = useState<string>("");
 
   useEffect(() => {
-    //if user cookies are valid then skip login
-    try {
-      async function checkStatus() {
-        const data = await checkAuthStatus();
-        if (data) {
-          setUser({ name: data.name, email: data.email });
-          setIsLoggedIn(true);
-        }
-      }
+    const authToken = document.cookie
+      .split(";")
+      .find((cookie) => cookie.startsWith(" auth_token"))
+      ?.split("=")[1];
+    if (authToken) {
+      const checkStatus = async () => {
+        const data = await checkAuthStatus(authToken);
 
+        //@ts-ignore
+        setUser({ name: data.name, email: data.email });
+        setIsLoggedIn(true);
+        setAuthToken(authToken);
+      };
       checkStatus();
-    } catch (error) {
-      console.log(error);
     }
+    //console.log(authToken);
   }, []);
 
   const login: UserAuth["login"] = async (email, password) => {
@@ -53,6 +56,10 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (data) {
       setUser({ name: data.name, email: data.email });
       setIsLoggedIn(true);
+      const expires = new Date();
+      expires.setDate(expires.getDate() + 7);
+      document.cookie = `auth_token=${data.token};sameSite=none;secure=true;path=/;expires=${expires}`;
+      setAuthToken(data.token);
     }
   };
 
@@ -61,13 +68,21 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (data) {
       setUser({ name: data.name, email: data.email });
       setIsLoggedIn(true);
+      const expires = new Date();
+      expires.setDate(expires.getDate() + 7);
+      document.cookie = `auth_token=${data.token};sameSite=none;secure=true;path=/;expires=${expires}`;
+      setAuthToken(data.token);
     }
   };
   const logout: UserAuth["logout"] = async () => {
     try {
-      await logoutUser();
+      await logoutUser(AuthToken);
       setUser(null);
       setIsLoggedIn(false);
+      setAuthToken("");
+      const expires = new Date();
+      expires.setDate(expires.getDate() - 7);
+      document.cookie = `auth_token=${AuthToken};sameSite=none;secure=true;path=/;expires=${expires}`;
       //window.location.reload();
     } catch (e) {
       console.log(e);

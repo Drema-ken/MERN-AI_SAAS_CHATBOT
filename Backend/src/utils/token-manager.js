@@ -8,7 +8,8 @@ export const createToken = (id, email, expiresIn) => {
 };
 
 export const verifyToken = (req, res, next) => {
-  const token = req.signedCookies["auth_token"]; // accesing auth token cookies sent by the frontend
+  const { token } = req.body; // accesing auth token cookies sent by the frontend
+
   if (!token || token.trim() === "") {
     return res.status(401).json({ message: "Token Not Received" });
   }

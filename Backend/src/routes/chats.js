@@ -8,7 +8,7 @@ const chatRouter = Router();
 
 //protected routes
 chatRouter.post("/new", verifyToken, generateChat);
-chatRouter.get("/all-chats", verifyToken, getAllUserChats);
+chatRouter.post("/all-chats", verifyToken, getAllUserChats);
 chatRouter.delete("/delete-chats", verifyToken, deleteAllChats);
 
 export default chatRouter;

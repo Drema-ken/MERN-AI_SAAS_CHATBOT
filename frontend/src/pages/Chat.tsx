@@ -22,6 +22,7 @@ const Chat = () => {
 
   //@ts-ignore
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
+  const [AuthToken, setAuthToken] = useState<string>("");
 
   const Submit = async () => {
     const recentPrompt = inputRef.current?.value as string;
@@ -34,7 +35,8 @@ const Chat = () => {
       inputRef.current.value = "";
     }
     if (recentPrompt !== "") {
-      const result = await chatting(recentPrompt);
+      //@ts-ignore
+      const result = await chatting(recentPrompt, AuthToken);
       try {
         //@ts-ignore
         const chats = result.map((chat) => {
@@ -42,7 +44,6 @@ const Chat = () => {
           return { role: chat.role, content: chat.parts[0].text };
         });
         setChatMessages(() => [...chats]);
-        console.log(chats);
       } catch (error) {
         console.log(error);
       }
@@ -52,7 +53,7 @@ const Chat = () => {
   const handleChatDelete = async () => {
     try {
       toast.loading("Deleting chats", { id: "delete" });
-      await deleteAllChats();
+      await deleteAllChats(AuthToken);
       setChatMessages([]);
       toast.success("Successfully deleted chats", { id: "delete" });
     } catch (err) {
@@ -65,8 +66,15 @@ const Chat = () => {
       try {
         toast.loading("Loading chats", { id: "loadChats" });
         const getChats = async () => {
-          const chats = await fetchingAllChats();
-          console.log(chats);
+          const authToken = document.cookie
+            .split(";")
+            .find((cookie) => cookie.startsWith(" auth_token"))
+            ?.split("=")[1];
+          //@ts-ignore
+          setAuthToken(authToken);
+
+          //@ts-ignore
+          const chats = await fetchingAllChats(authToken);
           setChatMessages(chats);
         };
         getChats().then(() =>
