@@ -33,15 +33,19 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [AuthToken, setAuthToken] = useState<string>("");
 
   useEffect(() => {
-    const authToken = localStorage.getItem("auth_token");
-    if (authToken && authToken !== "") {
-      const checkStatus = async () => {
-        const data = await checkAuthStatus(authToken);
-        setUser({ name: data.name, email: data.email });
-        setIsLoggedIn(true);
-        setAuthToken(authToken);
-      };
-      checkStatus();
+    try {
+      const authToken = localStorage.getItem("auth_token");
+      if (authToken && authToken !== "") {
+        const checkStatus = async () => {
+          const data = await checkAuthStatus(authToken);
+          setUser({ name: data.name, email: data.email });
+          setIsLoggedIn(true);
+          setAuthToken(authToken);
+        };
+        checkStatus();
+      }
+    } catch (err) {
+      console.log(err);
     }
 
     //console.log(authToken);
