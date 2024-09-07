@@ -33,21 +33,17 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [AuthToken, setAuthToken] = useState<string>("");
 
   useEffect(() => {
-    const authToken = document.cookie
-      .split(";")
-      .find((cookie) => cookie.startsWith(" auth_token"))
-      ?.split("=")[1];
-    if (authToken) {
+    const authToken = localStorage.getItem("auth_token");
+    if (authToken && authToken !== "") {
       const checkStatus = async () => {
         const data = await checkAuthStatus(authToken);
-
-        //@ts-ignore
         setUser({ name: data.name, email: data.email });
         setIsLoggedIn(true);
         setAuthToken(authToken);
       };
       checkStatus();
     }
+
     //console.log(authToken);
   }, []);
 
@@ -56,9 +52,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (data) {
       setUser({ name: data.name, email: data.email });
       setIsLoggedIn(true);
-      const expires = new Date();
-      expires.setDate(expires.getDate() + 7);
-      document.cookie = `auth_token=${data.token};sameSite=none;secure=true;path=/;expires=${expires}`;
+      localStorage.setItem("auth_token", data.token);
       setAuthToken(data.token);
     }
   };
@@ -68,9 +62,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (data) {
       setUser({ name: data.name, email: data.email });
       setIsLoggedIn(true);
-      const expires = new Date();
-      expires.setDate(expires.getDate() + 7);
-      document.cookie = `auth_token=${data.token};sameSite=none;secure=true;path=/;expires=${expires}`;
+      localStorage.setItem("auth_token", data.token);
       setAuthToken(data.token);
     }
   };
@@ -80,9 +72,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(null);
       setIsLoggedIn(false);
       setAuthToken("");
-      const expires = new Date();
-      expires.setDate(expires.getDate() - 7);
-      document.cookie = `auth_token=${AuthToken};sameSite=none;secure=true;path=/;expires=${expires}`;
+      localStorage.setItem("auth_token", "");
       //window.location.reload();
     } catch (e) {
       console.log(e);
