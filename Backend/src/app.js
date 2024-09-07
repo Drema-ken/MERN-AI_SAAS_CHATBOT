@@ -14,7 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://mern-ai-saas-chatbot-2.onrender.com/",
+    origin: "https://mern-ai-saas-chatbot-2.onrender.com",
     credentials: true,
   })
 );
