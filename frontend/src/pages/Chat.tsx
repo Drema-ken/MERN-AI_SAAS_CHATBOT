@@ -66,10 +66,7 @@ const Chat = () => {
       try {
         toast.loading("Loading chats", { id: "loadChats" });
         const getChats = async () => {
-          const authToken = document.cookie
-            .split(";")
-            .find((cookie) => cookie.startsWith(" auth_token"))
-            ?.split("=")[1];
+          const authToken = localStorage.getItem("auth_token");
           //@ts-ignore
           setAuthToken(authToken);
 

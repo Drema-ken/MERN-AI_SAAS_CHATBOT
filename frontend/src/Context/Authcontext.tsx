@@ -90,6 +90,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     logout,
     setUser,
     setIsLoggedIn,
+    AuthToken,
     isLoggedIn,
   };
 
